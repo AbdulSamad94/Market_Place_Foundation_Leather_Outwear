@@ -1,19 +1,21 @@
 import { groq } from "next-sanity";
 
 // Get all products with basic info
+
 export const productsQuery = groq`
-  *[_type == "product"] {
-    _id,
-    title,
-    slug,
-    price,
-    originalPrice,
-    category->,
-    style->,
-    inventory,
-    rating,
-    "imageUrl": images[0].asset->url
-  }
+ *[_type == "product"]{
+  _id,
+  slug,
+  name,
+  description,
+  price,
+  discountPercent,
+  tags[],
+  sizes[],
+  colors[],
+  isNew,
+  "imageUrl": image.asset->url
+}
 `;
 
 // Get new arrivals

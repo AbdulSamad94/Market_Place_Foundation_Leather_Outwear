@@ -100,8 +100,8 @@ export function ProductGrid({ products }: { products: Product[] }) {
             <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-6">
               {products.map((product) => (
                 <Link
-                  key={product.id}
-                  href={`/shop/${product.slug.current}`}
+                  key={product._id}
+                  href={`/products/${product.slug.current}`}
                   className="cursor-pointer"
                 >
                   <ProductCard {...product} />
