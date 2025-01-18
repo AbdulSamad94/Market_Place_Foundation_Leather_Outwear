@@ -32,7 +32,7 @@ export function ProductCard({
               )}
             />
           ))}
-          <span className="text-sm text-gray-500 ml-1">({4})</span>
+          <span className="text-sm text-gray-500 ml-1">({30})</span>
         </div>
         <h3 className="font-medium line-clamp-1">{name}</h3>
         <div className="flex items-center gap-2">
@@ -42,7 +42,7 @@ export function ProductCard({
               <span className={` text-sm text-gray-500 line-through`}>
                 ${price - 40}
               </span>
-              <span className="text-xs text-red-600">{discountPercent}%</span>
+              <span className="text-xs text-red-600">-{discountPercent}%</span>
             </>
           }
         </div>
