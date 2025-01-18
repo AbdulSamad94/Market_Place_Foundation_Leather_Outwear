@@ -42,7 +42,9 @@ export function ProductCard({
               <span className={` text-sm text-gray-500 line-through`}>
                 ${price - 40}
               </span>
-              <span className="text-xs text-red-600">-{discountPercent}%</span>
+              <span className="text-[10px] text-orange-600 font-semibold text-center rounded-full w-12 h-6 py-1 px-4 flex justify-center items-center bg-orange-100">
+                -{discountPercent}%
+              </span>
             </>
           }
         </div>
