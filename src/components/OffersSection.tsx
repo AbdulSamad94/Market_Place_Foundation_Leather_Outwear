@@ -1,73 +1,44 @@
 "use client";
-import React from "react";
+import { useEffect, useState } from "react";
 import CustomOffers from "./CustomOffers";
-import { ArrivalItem } from "./TypeSafety";
-
-const newArrivalsData: ArrivalItem[] = [
-  {
-    image: "/offers/image1.png",
-    text: "T-shirt with Tape Details",
-    price: "$120",
-  },
-  {
-    image: "/offers/image2.png",
-    text: "Skinny Fit Jeans",
-    price: "$240",
-    prevPrice: "$260",
-    badge: "-20%",
-  },
-  {
-    image: "/offers/image3.png",
-    text: "Checkered Shirt",
-    price: "$180",
-  },
-  {
-    image: "/offers/image4.png",
-    text: "Sleeve Striped T-shirt",
-    price: "$130",
-    prevPrice: "$160",
-    badge: "-30%",
-  },
-];
-
-const topSelling: ArrivalItem[] = [
-  {
-    image: "/offers/image5.png",
-    text: "Vertical Stripped Shirt",
-    price: "$212",
-    prevPrice: "$232",
-    badge: "-20%",
-  },
-  {
-    image: "/offers/image6.png",
-    text: "Courage Graphic T-shirt",
-    price: "$145",
-  },
-  {
-    image: "/offers/image7.png",
-    text: "Loose Fit Bermuda Shorts",
-    price: "$80",
-  },
-  {
-    image: "/offers/image8.png",
-    text: "Faded Skinny Jeans",
-    price: "$210",
-  },
-];
+import { client } from "@/sanity/lib/client";
+import { productsQuery } from "@/sanity/lib/queries";
+import { Product } from "@/types/products";
 
 const OffersSection = () => {
+  const [newProducts, setNewProducts] = useState<Product[] | null>(null);
+  const [topSelling, setTopSelling] = useState<Product[] | null>(null);
+
+  useEffect(() => {
+    const fetchNewData = async () => {
+      const data: Product[] = await client.fetch(productsQuery);
+      const newArrivals = data.filter((e) => e.isNew);
+      setNewProducts(newArrivals);
+    };
+    fetchNewData();
+  }, []);
+
+  useEffect(() => {
+    const fetchNewData = async () => {
+      const data: Product[] = await client.fetch(productsQuery);
+      const topSelling = data.filter((e) => !e.isNew);
+      setTopSelling(topSelling);
+    };
+    fetchNewData();
+  }, []);
+
   return (
     <div>
       <CustomOffers
         styling={"uppercase"}
         text={"new arrivals"}
-        arrivalData={newArrivalsData}
+        arrivalData={newProducts || []}
       />
       <div className="w-full h-[1px] bg-slate-200 mt-16 mb-8"></div>
       <CustomOffers
         styling={"lowercase"}
         text={"top selling"}
-        arrivalData={topSelling}
+        arrivalData={topSelling || []}
       />
     </div>
   );

@@ -6,7 +6,12 @@ import Loader from "../Loader";
 
 const ClientProductsGrid = async () => {
   const products = await client.fetch(productsQuery);
-
+  if (!products)
+    return (
+      <h1 className="text-4xl font-semibold text-center mt-24">
+        No Products Available!
+      </h1>
+    );
   return (
     <div>
       <Suspense fallback={<Loader />}>
