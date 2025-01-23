@@ -27,6 +27,12 @@ const OffersSection = () => {
     fetchNewData();
   }, []);
 
+  if (!newProducts || !topSelling)
+    return (
+      <h1 className="text-4xl text-center font-bold my-16 text-red-500">
+        Products Not Available!
+      </h1>
+    );
   return (
     <div>
       <CustomOffers
