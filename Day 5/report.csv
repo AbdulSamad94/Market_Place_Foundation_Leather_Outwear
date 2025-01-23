@@ -1,0 +1,8 @@
+Test No,Feature,Expected Outcome,Actual Outcome,Status,Priority
+T001,Navigation consistency,Links direct accurately,Are accurate,Pass,Low
+T002,Product rendering,Accurate product rendering,Are accurate,Pass,Medium
+T003,Dynamic routing,All products details page,done,Pass,High
+T004,Cart functionality,Seamless add/remove operation,done,Pass,High
+T005,Login/SignUp,Add authentication feature,done,Pass,Medium
+T006,User who can add products to cart,Users who are logged in can only add products to cart,done,Pass,Medium
+T007,Performance,Score ≥ 80,achieved,Pass,High
