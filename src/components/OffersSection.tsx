@@ -1,10 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import CustomOffers from "./CustomOffers";
 import { client } from "@/sanity/lib/client";
 import { productsQuery } from "@/sanity/lib/queries";
 import { Product } from "@/types/products";
-import Loader from "./Loader";
 
 const OffersSection = () => {
   const [newProducts, setNewProducts] = useState<Product[] | null>(null);
@@ -37,24 +36,27 @@ const OffersSection = () => {
     );
   }
 
-  if (!newProducts || !topSelling) {
-    return <Loader />;
-  }
-
   return (
-    <div>
+    <Suspense>
+      {/* New Arrivals Section */}
       <CustomOffers
         styling={"uppercase"}
         text={"new arrivals"}
         arrivalData={newProducts}
+        isLoading={!newProducts} // Pass loading state
       />
-      <div className="w-full h-[1px] bg-slate-200 mt-16 mb-8"></div>
+
+      {/* Divider */}
+      <div className="w-full h-[1px] bg-slate-200 my-8"></div>
+
+      {/* Top Selling Section */}
       <CustomOffers
         styling={"lowercase"}
         text={"top selling"}
-        arrivalData={topSelling}
+        arrivalData={topSelling || []}
+        isLoading={!topSelling} // Pass loading state
       />
-    </div>
+    </Suspense>
   );
 };
 

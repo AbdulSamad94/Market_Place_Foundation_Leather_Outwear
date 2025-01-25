@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
 import StripeProvider from "@/lib/StripeProvider";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "E-Commerce Website by AS",
@@ -19,14 +20,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <StripeProvider>
-          <Header />
-          {children}
-          <Footer />
-        </StripeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body>
+          <StripeProvider>
+            <Header />
+            {children}
+            <Footer />
+          </StripeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

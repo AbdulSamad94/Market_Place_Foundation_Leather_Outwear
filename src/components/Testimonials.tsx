@@ -1,8 +1,10 @@
 "use client";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ArrowRight, ArrowLeft, Star, CircleCheck } from "lucide-react";
 import { Navigation, Pagination, A11y } from "swiper/modules";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
+import { gsap } from "gsap";
 import type { Swiper as SwiperType } from "swiper";
 
 import "swiper/css";
@@ -41,6 +43,41 @@ const testimonialData: Testimonial[] = [
 const Testimonials: React.FC = () => {
   const swiperRef = useRef<SwiperType | null>(null);
 
+  useEffect(() => {
+    const updateBlurEffect = () => {
+      if (swiperRef.current) {
+        const slides = swiperRef.current.slides;
+        const activeIndex = swiperRef.current.activeIndex;
+
+        // Calculate the center slide index for different `slidesPerView` configurations
+        const slidesPerView = swiperRef.current.params.slidesPerView as number;
+        const centerIndex = activeIndex + Math.floor(slidesPerView / 2);
+
+        slides.forEach((slide, index) => {
+          const slideElement = slide as HTMLElement;
+
+          if (index === centerIndex) {
+            gsap.to(slideElement, { filter: "blur(0px)", duration: 0.5 });
+          } else {
+            gsap.to(slideElement, { filter: "blur(3px)", duration: 0.5 });
+          }
+        });
+      }
+    };
+
+    if (swiperRef.current) {
+      // Initialize blur effect on load
+      updateBlurEffect();
+
+      // Update blur effect on slide change
+      swiperRef.current.on("slideChange", updateBlurEffect);
+    }
+
+    return () => {
+      swiperRef.current?.off("slideChange", updateBlurEffect);
+    };
+  }, []);
+
   return (
     <section className="mx-auto">
       <div className="mt-20 lg:px-14 px-5 flex justify-between">
@@ -74,7 +111,7 @@ const Testimonials: React.FC = () => {
         >
           {testimonialData.map((items, index) => (
             <SwiperSlide key={index}>
-              <div className="border hover:scale-90 mx-auto transition-all border-slate-300 lg:py-5 lg:px-8 px-4 py-3 w-[300px] h-auto lg:w-[400px] lg:h-[240px] rounded-3xl">
+              <div className="border mx-auto transition-all border-slate-300 lg:py-5 lg:px-8 px-4 py-3 w-[300px] h-auto lg:w-[400px] lg:h-[240px] rounded-3xl">
                 <div className="flex gap-x-2">
                   <Star className="w-5 text-yellow-400 fill-current" />
                   <Star className="w-5 text-yellow-400 fill-current" />

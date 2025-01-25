@@ -1,16 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import scrollLock from "scroll-lock";
-import {
-  Search,
-  ChevronDown,
-  ShoppingCart,
-  CircleUserRound,
-  Menu,
-  X,
-} from "lucide-react";
+import { Search, ChevronDown, ShoppingCart, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useShoppingCart } from "use-shopping-cart";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const Header = () => {
   const { cartCount } = useShoppingCart();
@@ -86,7 +80,12 @@ const Header = () => {
           </div>
         </Link>
         <div>
-          <CircleUserRound className="w-5 h-5 cursor-pointer" />
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
       </div>
       <div
