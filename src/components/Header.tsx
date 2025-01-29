@@ -5,20 +5,22 @@ import { Search, ChevronDown, ShoppingCart, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useShoppingCart } from "use-shopping-cart";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { useSearch } from "@/context/ContextProvider";
 
 const Header = () => {
   const { cartCount } = useShoppingCart();
+  const { searchQuery, setSearchQuery } = useSearch();
+  const [click, setClick] = useState(false);
+
+  function handleClick() {
+    setClick(!click);
+  }
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-  const [click, setClick] = useState(false);
-
-  function handleClick() {
-    setClick(!click);
-  }
 
   useEffect(() => {
     if (click) {
@@ -70,6 +72,8 @@ const Header = () => {
           className="w-[600px] h-12 py-3 pl-16 rounded-full font-outfit cursor-pointer bg-slate-100 text-slate-400 text-left text-sm"
           type="text"
           placeholder="Search for products..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
       <div className="flex justify-center items-center gap-x-4">

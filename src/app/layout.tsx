@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import "./globals.css";
 import StripeProvider from "@/lib/StripeProvider";
 import { ClerkProvider } from "@clerk/nextjs";
+import { SearchProvider } from "@/context/ContextProvider";
 
 export const metadata: Metadata = {
   title: "E-Commerce Website by AS",
@@ -21,15 +22,17 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body>
-          <StripeProvider>
-            <Header />
-            {children}
-            <Footer />
-          </StripeProvider>
-        </body>
-      </html>
+      <SearchProvider>
+        <html lang="en">
+          <body>
+            <StripeProvider>
+              <Header />
+              {children}
+              <Footer />
+            </StripeProvider>
+          </body>
+        </html>
+      </SearchProvider>
     </ClerkProvider>
   );
 }

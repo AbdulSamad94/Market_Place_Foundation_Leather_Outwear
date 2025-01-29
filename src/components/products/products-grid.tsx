@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Product } from "@/types/products";
+import { useSearch } from "@/context/ContextProvider";
 
 const sortOptions = [
   { label: "Most Popular", value: "most-popular" },
@@ -23,6 +24,10 @@ const sortOptions = [
 export function ProductGrid({ products }: { products: Product[] }) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
+  const { searchQuery } = useSearch(); // Get the search query from context
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-white">
@@ -97,8 +102,15 @@ export function ProductGrid({ products }: { products: Product[] }) {
 
           {/* Product Grid */}
           <div className="flex-1">
+            {filteredProducts.length === 0 && (
+              <div className="text-center mt-24">
+                <h1 className="text-4xl font-semibold text-center">
+                  No Products Available!
+                </h1>
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-6">
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <Link
                   key={product._id}
                   href={`/products/${product.slug.current}`}
