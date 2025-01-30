@@ -69,7 +69,7 @@ const Header = () => {
       <div className="hidden lg:block relative">
         <Search className="absolute left-4 top-[13px] text-slate-500 cursor-pointer" />
         <input
-          className="w-[600px] h-12 py-3 pl-16 rounded-full font-outfit cursor-pointer bg-slate-100 text-slate-400 text-left text-sm"
+          className="w-[600px] h-12 py-3 pl-16 rounded-full font-outfit bg-slate-100 text-slate-400 text-left text-sm"
           type="text"
           placeholder="Search for products..."
           value={searchQuery}
