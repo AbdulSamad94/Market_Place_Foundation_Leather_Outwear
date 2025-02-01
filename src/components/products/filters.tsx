@@ -52,7 +52,12 @@ export function Filters({ isMobile, isOpen, onClose }: FiltersProps) {
 
   // Main content of the filter component
   const filterContent = (
-    <div className={cn("flex flex-col h-full", isMobile ? "bg-white" : "")}>
+    <div
+      className={cn(
+        "flex flex-col h-full py-8 px-4 border border-slate-300 rounded-3xl",
+        isMobile ? "bg-white" : ""
+      )}
+    >
       {/* Mobile header */}
       {isMobile && (
         <div className="flex items-center justify-between p-4 border-b">
@@ -72,11 +77,7 @@ export function Filters({ isMobile, isOpen, onClose }: FiltersProps) {
         {/* Categories accordion */}
         <Accordion.Root type="multiple" className="space-y-4">
           {categories.map((category) => (
-            <Accordion.Item
-              key={category}
-              value={category}
-              className="border-b pb-4"
-            >
+            <Accordion.Item key={category} value={category}>
               <Accordion.Trigger className="flex items-center justify-between w-full text-left">
                 <span className="text-sm">{category}</span>
                 <ChevronRight className="h-4 w-4 transform transition-transform duration-200 group-data-[state=open]:rotate-90" />
@@ -141,7 +142,7 @@ export function Filters({ isMobile, isOpen, onClose }: FiltersProps) {
           {/* Size options */}
           <div className="space-y-4">
             <h3 className="font-medium">Size</h3>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {sizes.map((size) => (
                 <button
                   key={size}

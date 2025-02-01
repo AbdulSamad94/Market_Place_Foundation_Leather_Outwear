@@ -1,10 +1,10 @@
 import { Suspense } from "react";
-import Loader from "@/components/Loader";
+import { Skeleton } from "@/components/ui/skeleton";
 import ClientProductsGrid from "@/components/products/ClientProductsGrid";
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<div>{<Loader />}</div>}>
+    <Suspense fallback={<Skeleton className="h-96 w-full" />}>
       <ClientProductsGrid />
     </Suspense>
   );

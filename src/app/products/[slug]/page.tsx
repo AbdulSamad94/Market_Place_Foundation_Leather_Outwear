@@ -9,6 +9,7 @@ import { Product } from "@/types/products";
 import { client } from "@/sanity/lib/client";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
+import { ProductSkeleton } from "@/components/ProductSkeleton";
 
 const sizeData = [
   { name: "Small" },
@@ -22,25 +23,11 @@ type ProductPageProps = {
     slug: string;
   };
 };
-const res = client.fetch(`*[_type == "product"]{
-  _id,
-  slug,
-  name,
-  description,
-  price,
-  discountPercent,
-  tags[],
-  sizes[],
-  colors[],
-  isNew,
-  "imageUrl": image.asset->url
-}
-`);
-console.log(res);
+
 const Page = ({ params }: ProductPageProps) => {
   const { addItem } = useShoppingCart();
   const [product, setProduct] = useState<Product | null>(null);
-  const [size, setSize] = useState<string>(String);
+  const [size, setSize] = useState<string>("");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -56,26 +43,20 @@ const Page = ({ params }: ProductPageProps) => {
         colors[],
         isNew,
         "imageUrl": image.asset->url
-      }
-      `);
+      }`);
       const data = res.find((e) => e.slug.current === params.slug);
       if (data) {
         setProduct(data);
       } else {
         setProduct(null);
-        console.error("error");
+        console.error("Product not found");
       }
     };
     fetchProducts();
   }, [params.slug]);
 
-  console.log(product);
   if (!product) {
-    return (
-      <div className="px-10 mx-5 h-[1000px]">
-        <p>Loading.....</p>
-      </div>
-    );
+    return <ProductSkeleton />;
   }
 
   const handleAddToCart = () => {
@@ -89,11 +70,11 @@ const Page = ({ params }: ProductPageProps) => {
         quantity: 1,
         size: size,
         color: product.colors,
-        currency: "USD", // Add the currency property
+        currency: "USD",
       });
       toast.success(`"${product.name}" Added To Cart`);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -110,7 +91,7 @@ const Page = ({ params }: ProductPageProps) => {
           >
             Shop <ChevronRight size={18} />
           </Link>
-          <p className="font-medium ml-2">{product.tags}</p>
+          <p className="font-medium ml-2">{product.tags.join(", ")}</p>
         </div>
         <div className="flex justify-center lg:flex-row flex-col gap-10 mt-12">
           <div className="flex mx-auto lg:flex-row flex-col-reverse">
@@ -137,7 +118,7 @@ const Page = ({ params }: ProductPageProps) => {
             </div>
           </div>
           <div className="lg:w-1/2">
-            <h1 className="lg:text-[40px] text-2xl font-bold ">
+            <h1 className="lg:text-[40px] text-2xl font-bold">
               {product.name}
             </h1>
             <div className="flex my-4 gap-x-1 items-center">
@@ -148,22 +129,22 @@ const Page = ({ params }: ProductPageProps) => {
               <StarHalf className="w-5 text-yellow-400 fill-current" />
               <p className="font-medium text-sm">
                 {4} / <span className="text-slate-500 text-sm">5</span>
-              </p>{" "}
+              </p>
             </div>
             <h1 className="flex font-bold text-[30px]">${product.price}</h1>
             <p className="text-sm text-slate-600 my-4">{product.description}</p>
             <div className="bg-slate-300 rounded-full mt-6 h-[2px]"></div>
             <p className="text-slate-600 mt-4 text-lg">Choose Size</p>
             <div className="lg:flex gap-5 mt-4 grid grid-cols-2 mx-auto">
-              {sizeData.map((items, index) => (
+              {sizeData.map((item, index) => (
                 <button
                   key={index}
-                  onClick={() => setSize(items.name)}
+                  onClick={() => setSize(item.name)}
                   className={`${
-                    items.name === size ? "bg-black text-white" : "bg-slate-200"
-                  } w-28 h-12 rounded-full py-2 px-5 text-center `}
+                    item.name === size ? "bg-black text-white" : "bg-slate-200"
+                  } w-28 h-12 rounded-full py-2 px-5 text-center`}
                 >
-                  {items.name}
+                  {item.name}
                 </button>
               ))}
             </div>
