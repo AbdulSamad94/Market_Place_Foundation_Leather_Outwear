@@ -80,17 +80,30 @@ const Header = () => {
         initial="hidden"
         animate="visible"
       >
-        {["Shop", "On Sale", "New Arrivals", "Brands"].map((text, index) => (
-          <motion.li
-            key={text}
-            custom={index}
-            variants={linkVariant}
-            className="cursor-pointer"
-            onClick={() => scrollToSection(text.toLowerCase().replace(" ", ""))}
-          >
-            {text}
-          </motion.li>
-        ))}
+        <motion.li variants={linkVariant} className="cursor-pointer">
+          <Link href="/shop">Shop</Link>
+        </motion.li>
+        <motion.li
+          variants={linkVariant}
+          className="cursor-pointer"
+          onClick={() => scrollToSection("onsale")}
+        >
+          On Sale
+        </motion.li>
+        <motion.li
+          variants={linkVariant}
+          className="cursor-pointer"
+          onClick={() => scrollToSection("newarrivals")}
+        >
+          New Arrivals
+        </motion.li>
+        <motion.li
+          variants={linkVariant}
+          className="cursor-pointer"
+          onClick={() => scrollToSection("brands")}
+        >
+          Brands
+        </motion.li>
       </motion.ul>
       <motion.div
         className="hidden lg:block relative"
