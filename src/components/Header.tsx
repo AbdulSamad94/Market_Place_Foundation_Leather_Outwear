@@ -1,4 +1,5 @@
 "use client";
+import { integralCF } from "@/app/fonts/fonts";
 import React, { useState, useEffect } from "react";
 import scrollLock from "scroll-lock";
 import { Search, ChevronDown, ShoppingCart, Menu, X } from "lucide-react";
@@ -8,8 +9,10 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useSearch } from "@/context/ContextProvider";
 import { motion } from "motion/react";
 
+const navLinks = ["Shop", "On Sale", "New Arrivals", "Brands"];
+
 const logoVariant = {
-  hidden: { x: -100, opacity: 0 },
+  hidden: { x: -20, opacity: 0 },
   visible: { x: 0, opacity: 1, transition: { duration: 0.5 } },
 };
 
@@ -33,7 +36,7 @@ const cartVariant = {
 };
 
 const userVariant = {
-  hidden: { x: 100, opacity: 0 },
+  hidden: { x: 20, opacity: 0 },
   visible: { x: 0, opacity: 1, transition: { delay: 0.7, duration: 0.3 } },
 };
 
@@ -42,9 +45,6 @@ const Header = () => {
   const { searchQuery, setSearchQuery } = useSearch();
   const [click, setClick] = useState(false);
 
-  function handleClick() {
-    setClick(!click);
-  }
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -61,12 +61,17 @@ const Header = () => {
   }, [click]);
 
   return (
-    <header className="w-full lg:h-28 h-20 flex justify-between lg:justify-around items-center py-4 lg:px-10 px-7">
+    <header
+      className={`w-full lg:h-28 h-20 flex justify-between lg:justify-around items-center py-4 lg:px-10 px-7`}
+    >
       <div className="flex relative justify-center items-center gap-x-5">
-        <Menu onClick={handleClick} className="lg:hidden cursor-pointer" />
+        <Menu
+          onClick={() => setClick(!click)}
+          className="lg:hidden cursor-pointer"
+        />
         <Link href="/">
           <motion.h1
-            className="text-[35px] font-bold tracking-wide cursor-pointer"
+            className={`${integralCF.className} text-[35px] font-bold tracking-wide cursor-pointer`}
             variants={logoVariant}
             initial="hidden"
             animate="visible"
@@ -80,30 +85,26 @@ const Header = () => {
         initial="hidden"
         animate="visible"
       >
-        <motion.li variants={linkVariant} className="cursor-pointer">
-          <Link href="/shop">Shop</Link>
-        </motion.li>
-        <motion.li
-          variants={linkVariant}
-          className="cursor-pointer"
-          onClick={() => scrollToSection("onsale")}
-        >
-          On Sale
-        </motion.li>
-        <motion.li
-          variants={linkVariant}
-          className="cursor-pointer"
-          onClick={() => scrollToSection("newarrivals")}
-        >
-          New Arrivals
-        </motion.li>
-        <motion.li
-          variants={linkVariant}
-          className="cursor-pointer"
-          onClick={() => scrollToSection("brands")}
-        >
-          Brands
-        </motion.li>
+        {navLinks.map((item, index) => (
+          <motion.li
+            key={item}
+            variants={linkVariant}
+            custom={index}
+            className="cursor-pointer"
+          >
+            {item === "Shop" ? (
+              <Link href="/products">{item}</Link>
+            ) : (
+              <span
+                onClick={() =>
+                  scrollToSection(item.toLowerCase().replace(" ", ""))
+                }
+              >
+                {item}
+              </span>
+            )}
+          </motion.li>
+        ))}
       </motion.ul>
       <motion.div
         className="hidden lg:block relative"
@@ -143,50 +144,45 @@ const Header = () => {
           </SignedIn>
         </motion.div>
       </div>
-      <div
-        className={`${click ? "block w-1/2 top-0 left-0 h-full" : "w-0 -left-10 top-0"} duration-300 absolute bg-slate-100 border-r-2  border-slate-200`}
+      <motion.div
+        className={`${click ? "block w-1/2 top-0 left-0 h-full" : "w-0 -left-10 top-0"} duration-300 absolute bg-slate-100 border-r-2 border-slate-200`}
+        initial="hidden"
+        animate={click ? "visible" : "hidden"}
       >
-        <X onClick={handleClick} className="cursor-pointer mt-8 ml-4" />
-        <div className="flex flex-col justify-center items-center gap-y-10 text-base uppercase list-none mt-36">
-          <Link
-            href="/products"
-            onClick={() => {
-              scrollToSection("shop");
-              setClick(false);
-            }}
-            className="flex gap-x-1 justify-center items-center cursor-pointer"
-          >
-            Shop <ChevronDown className="w-4 h-4 cursor-pointer" />
-          </Link>
-          <li
-            onClick={() => {
-              scrollToSection("onsale");
-              setClick(false);
-            }}
-            className="cursor-pointer"
-          >
-            On Sale
-          </li>
-          <li
-            onClick={() => {
-              scrollToSection("onsale");
-              setClick(false);
-            }}
-            className="cursor-pointer"
-          >
-            New Arrivals
-          </li>
-          <li
-            onClick={() => {
-              scrollToSection("brands");
-              setClick(false);
-            }}
-            className="cursor-pointer"
-          >
-            Brands
-          </li>
-        </div>
-      </div>
+        <X
+          onClick={() => setClick(!click)}
+          className="cursor-pointer mt-8 ml-4"
+        />
+        <motion.div
+          className="flex flex-col justify-center items-center gap-y-10 text-base uppercase list-none mt-36"
+          variants={{
+            visible: { transition: { staggerChildren: 0.1 } },
+            hidden: {},
+          }}
+        >
+          {navLinks.map((item, index) => (
+            <motion.div
+              key={item}
+              variants={linkVariant}
+              custom={index}
+              className="cursor-pointer"
+              onClick={() => {
+                if (item !== "Shop")
+                  scrollToSection(item.toLowerCase().replace(" ", ""));
+                setClick(false);
+              }}
+            >
+              {item === "Shop" ? (
+                <Link href="/products" className="flex gap-x-1 items-center">
+                  {item} <ChevronDown className="w-4 h-4" />
+                </Link>
+              ) : (
+                item
+              )}
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
     </header>
   );
 };

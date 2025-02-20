@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useShoppingCart } from "use-shopping-cart";
 import { loadStripe } from "@stripe/stripe-js";
+import { integralCF } from "@/app/fonts/fonts";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
@@ -88,7 +89,9 @@ const Page = () => {
           </Link>
           <p className="ml-2 font-medium">Cart</p>
         </div>
-        <h1 className="text-[40px] font-bold my-6">Your Cart</h1>
+        <h1 className={`${integralCF.className} text-[40px] font-bold my-6`}>
+          Your Cart
+        </h1>
         {/* MainDiv */}
         <div className="flex md:flex-row flex-col justify-center gap-4">
           {/* LeftSide */}

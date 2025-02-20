@@ -1,12 +1,15 @@
 import React from "react";
 import Image from "next/image";
+import { integralCF } from "@/app/fonts/fonts";
 
 const DressStyles = () => {
   return (
     <section className="mt-20">
       <div className="w-[90%] h-full lg:py-10 py-8 mx-auto rounded-2xl bg-zinc-200/90 ">
         <div className="lg:mb-10 mb-8">
-          <h1 className="text-[32px] font-bold text-center">
+          <h1
+            className={`${integralCF.className} text-[40px] font-bold text-center`}
+          >
             BROWSE BY dress STYLE
           </h1>
         </div>

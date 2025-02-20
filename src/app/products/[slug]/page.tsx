@@ -10,6 +10,7 @@ import { client } from "@/sanity/lib/client";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import { ProductSkeleton } from "@/components/ProductSkeleton";
+import { integralCF } from "@/app/fonts/fonts";
 
 const sizeData = [
   { name: "Small" },
@@ -93,8 +94,9 @@ const Page = ({ params }: ProductPageProps) => {
           </Link>
           <p className="font-medium ml-2">{product.tags.join(", ")}</p>
         </div>
-        <div className="flex justify-center lg:flex-row flex-col gap-10 mt-12">
-          <div className="flex mx-auto lg:flex-row flex-col-reverse">
+        {/* LeftSide  */}
+        <div className="flex justify-center lg:flex-row flex-col mt-12">
+          <div className="flex lg:flex-row flex-col-reverse">
             <div className="w-full h-full lg:h-32 mt-10 lg:mt-0 flex justify-center">
               <div>
                 <Image
@@ -102,6 +104,7 @@ const Page = ({ params }: ProductPageProps) => {
                   alt={product.name}
                   width={80}
                   height={80}
+                  className="border border-black rounded-md"
                 />
               </div>
             </div>
@@ -112,13 +115,16 @@ const Page = ({ params }: ProductPageProps) => {
                   alt={product.name}
                   width={350}
                   height={350}
-                  className="lg:w-[350px] lg:h-[450px] w-[280px] h-[350px] ml-7"
+                  className="lg:w-[350px] lg:h-[450px] w-[280px] h-[350px] ml-7 border border-black rounded-lg"
                 />
               </div>
             </div>
           </div>
+          {/* Right Side */}
           <div className="lg:w-1/2">
-            <h1 className="lg:text-[40px] text-2xl font-bold">
+            <h1
+              className={`lg:text-[40px] text-2xl font-bold ${integralCF.className} leading-10`}
+            >
               {product.name}
             </h1>
             <div className="flex my-4 gap-x-1 items-center">
@@ -141,8 +147,10 @@ const Page = ({ params }: ProductPageProps) => {
                   key={index}
                   onClick={() => setSize(item.name)}
                   className={`${
-                    item.name === size ? "bg-black text-white" : "bg-slate-200"
-                  } w-28 h-12 rounded-full py-2 px-5 text-center`}
+                    item.name === size
+                      ? "bg-black text-white"
+                      : "bg-slate-200 hover:bg-slate-300"
+                  } w-28 h-12 rounded-full py-2 px-5 text-center  duration-200`}
                 >
                   {item.name}
                 </button>
@@ -150,7 +158,7 @@ const Page = ({ params }: ProductPageProps) => {
             </div>
             <button
               onClick={handleAddToCart}
-              className="bg-black text-center text-white h-12 w-full px-8 py-3 mt-8 rounded-full flex justify-center items-center"
+              className="bg-black hover:bg-slate-900 duration-300 hover:scale-105 text-center text-white h-12 w-full px-8 py-3 mt-8 rounded-full flex justify-center items-center"
             >
               Add to cart
             </button>

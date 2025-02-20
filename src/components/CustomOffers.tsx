@@ -10,6 +10,7 @@ import "swiper/css/scrollbar";
 import Link from "next/link";
 import { Skeleton } from "./ui/skeleton";
 import { motion } from "motion/react";
+import { integralCF } from "@/app/fonts/fonts";
 
 interface CustomOffersProps {
   styling: string;
@@ -28,7 +29,7 @@ const CustomOffers: React.FC<CustomOffersProps> = ({
     <section>
       <div>
         <h1
-          className={`${styling} py-4 text-[40px] font-bold text-center mx-auto`}
+          className={`${styling} ${integralCF.className} py-4 text-[40px] font-bold text-center mx-auto`}
         >
           {text}
         </h1>

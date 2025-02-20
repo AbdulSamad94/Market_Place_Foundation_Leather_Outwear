@@ -4,6 +4,7 @@ import Image from "next/image";
 import CountUp from "react-countup";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { integralCF } from "@/app/fonts/fonts";
 
 const textVariant = {
   hidden: { x: -100, opacity: 0 },
@@ -45,7 +46,9 @@ const Hero = () => {
           initial="hidden"
           animate="visible"
         >
-          <h1 className="uppercase text-4xl md:text-5xl w-full text-left font-bold mb-4 md:mb-8">
+          <h1
+            className={`${integralCF.className} uppercase text-4xl md:text-6xl w-full text-left font-bold mb-4 md:mb-8`}
+          >
             find clothes that matches your styles
           </h1>
           <p className="text-zinc-500 text-[16px] mb-5 md:mb-8">
@@ -60,7 +63,7 @@ const Hero = () => {
           >
             <Link
               href="/products"
-              className="bg-black text-white py-3 px-5 w-full md:w-48 h-12 rounded-full flex items-center justify-center mb-12"
+              className="bg-black hover:bg-slate-900 duration-300 hover:scale-110 text-white py-3 px-5 w-full md:w-48 h-12 rounded-full flex items-center justify-center mb-12"
             >
               Shop Now
             </Link>

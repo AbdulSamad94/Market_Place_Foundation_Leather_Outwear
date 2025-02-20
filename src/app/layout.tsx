@@ -5,6 +5,7 @@ import "./globals.css";
 import StripeProvider from "@/lib/StripeProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SearchProvider } from "@/context/ContextProvider";
+import { integralCF } from "@/app/fonts/fonts";
 
 export const metadata: Metadata = {
   title: "E-Commerce Website by AS",
@@ -24,7 +25,7 @@ export default function RootLayout({
     <ClerkProvider>
       <SearchProvider>
         <html lang="en">
-          <body>
+          <body className={`${integralCF.variable}`}>
             <StripeProvider>
               <Header />
               {children}
