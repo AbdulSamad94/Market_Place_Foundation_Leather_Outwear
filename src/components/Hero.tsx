@@ -6,19 +6,42 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { integralCF } from "@/app/fonts/fonts";
 
+// Refined Animation Variants with simplified easing (easeInOut)
 const textVariant = {
-  hidden: { x: -100, opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { duration: 0.8 } },
+  hidden: { y: 40, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.7, ease: "easeInOut" }, // Using "easeInOut" string
+  },
+};
+
+const paragraphVariant = {
+  hidden: { y: 30, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.6, ease: "easeInOut", delay: 0.2 }, // Using "easeInOut" string
+  },
 };
 
 const imageVariant = {
-  hidden: { x: 100, opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { duration: 0.8 } },
+  hidden: { x: 120, opacity: 0, scale: 0.9 },
+  visible: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.9, ease: "easeInOut" }, // Using "easeInOut" string
+  },
 };
 
 const buttonVariant = {
-  hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { delay: 0.4, duration: 0.6 } },
+  hidden: { y: 30, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { delay: 0.5, duration: 0.6, ease: "easeInOut" }, // Using "easeInOut" string
+  },
 };
 
 const counterVariant = {
@@ -26,7 +49,7 @@ const counterVariant = {
   visible: (i: number) => ({
     y: 0,
     opacity: 1,
-    transition: { delay: i * 0.2, duration: 0.6 },
+    transition: { delay: 0.3 + i * 0.1, duration: 0.5, ease: "easeInOut" }, // Using "easeInOut" string
   }),
 };
 
@@ -38,24 +61,27 @@ const Hero = () => {
   ];
 
   return (
-    <section className="w-full h-full bg-zinc-100 pt-8 md:pt-20">
+    <section className="w-full h-full bg-zinc-100 pt-8 md:pt-20 overflow-hidden">
       <div className="flex lg:justify-between flex-col lg:flex-row items-center">
-        <motion.div
-          className="md:w-2/5 px-3 md:ml-10 md:px-0 flex flex-col"
-          variants={textVariant}
-          initial="hidden"
-          animate="visible"
-        >
-          <h1
+        <motion.div className="md:w-2/5 px-3 md:ml-10 md:px-0 flex flex-col">
+          <motion.h1
             className={`${integralCF.className} uppercase text-4xl md:text-6xl w-full text-left font-bold mb-4 md:mb-8`}
+            variants={textVariant}
+            initial="hidden"
+            animate="visible"
           >
             find clothes that matches your styles
-          </h1>
-          <p className="text-zinc-500 text-[16px] mb-5 md:mb-8">
+          </motion.h1>
+          <motion.p
+            className="text-zinc-500 text-[16px] mb-5 md:mb-8"
+            variants={paragraphVariant}
+            initial="hidden"
+            animate="visible"
+          >
             Browse through our diverse range of meticulously crafted garments,
             designed to bring out your individuality and cater to your sense of
             style.
-          </p>
+          </motion.p>
           <motion.div
             variants={buttonVariant}
             initial="hidden"
@@ -76,7 +102,7 @@ const Hero = () => {
             {data.map((item, index) => (
               <motion.div key={index} variants={counterVariant} custom={index}>
                 <div className="text-4xl font-bold mb-2">
-                  <CountUp end={item.number} duration={3} />+
+                  <CountUp end={item.number} duration={2} />+
                 </div>
                 <div className="text-sm md:text-[16px] text-zinc-500">
                   {item.text}

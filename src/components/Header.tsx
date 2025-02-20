@@ -7,37 +7,50 @@ import Link from "next/link";
 import { useShoppingCart } from "use-shopping-cart";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useSearch } from "@/context/ContextProvider";
-import { motion } from "motion/react";
+import { motion } from "framer-motion"; // Correct import
 
 const navLinks = ["Shop", "On Sale", "New Arrivals", "Brands"];
 
+// Optimized animation variants - Simpler and faster
 const logoVariant = {
-  hidden: { x: -20, opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { duration: 0.5 } },
+  hidden: { x: -10, opacity: 0 }, // Reduced x distance
+  visible: { x: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } }, // Shorter duration and simpler ease
 };
 
 const linkVariant = {
-  hidden: { y: 20, opacity: 0 },
+  hidden: { y: 10, opacity: 0 }, // Reduced y distance
   visible: (i: number) => ({
     y: 0,
     opacity: 1,
-    transition: { delay: i * 0.1, duration: 0.3 },
+    transition: { delay: i * 0.05, duration: 0.2, ease: "easeOut" }, // Shorter delay and duration
   }),
 };
 
 const searchVariant = {
-  hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { delay: 0.5, duration: 0.3 } },
+  hidden: { y: 10, opacity: 0 }, // Reduced y distance
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { delay: 0.3, duration: 0.2, ease: "easeOut" },
+  }, // Shorter delay and duration
 };
 
 const cartVariant = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { delay: 0.6, duration: 0.3 } },
+  hidden: { opacity: 0, scale: 0.9 }, // Start slightly scaled down
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { delay: 0.4, duration: 0.2, ease: "easeOut" },
+  }, // Shorter delay and duration
 };
 
 const userVariant = {
-  hidden: { x: 20, opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { delay: 0.7, duration: 0.3 } },
+  hidden: { x: 10, opacity: 0 }, // Reduced x distance
+  visible: {
+    x: 0,
+    opacity: 1,
+    transition: { delay: 0.5, duration: 0.2, ease: "easeOut" },
+  }, // Shorter delay and duration
 };
 
 const Header = () => {
@@ -156,7 +169,7 @@ const Header = () => {
         <motion.div
           className="flex flex-col justify-center items-center gap-y-10 text-base uppercase list-none mt-36"
           variants={{
-            visible: { transition: { staggerChildren: 0.1 } },
+            visible: { transition: { staggerChildren: 0.05 } }, // Reduced stagger
             hidden: {},
           }}
         >

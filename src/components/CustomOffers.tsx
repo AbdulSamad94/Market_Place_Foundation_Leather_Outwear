@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Star, StarHalf } from "lucide-react";
 import { Product } from "@/types/products";
-import { Navigation, Pagination, A11y } from "swiper/modules";
+import { Navigation, Pagination, A11y, Autoplay } from "swiper/modules"; // Import Autoplay
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -9,30 +9,54 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import Link from "next/link";
 import { Skeleton } from "./ui/skeleton";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { integralCF } from "@/app/fonts/fonts";
 
 interface CustomOffersProps {
   styling: string;
   text: string;
-  arrivalData: Product[] | null; // Allow null for loading state
-  isLoading?: boolean; // Add isLoading prop
+  arrivalData: Product[] | null;
+  isLoading?: boolean;
 }
+
+// Animation variants for CustomOffers
+const containerVariant = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 },
+  }, // Stagger children for a cascading effect
+};
+
+const headingVariant = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
+const slideVariant = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+};
 
 const CustomOffers: React.FC<CustomOffersProps> = ({
   styling,
   text,
   arrivalData,
-  isLoading = false, // Default to false
+  isLoading = false,
 }) => {
   return (
-    <section>
+    <motion.section
+      variants={containerVariant}
+      initial="hidden"
+      animate="visible"
+    >
       <div>
-        <h1
+        <motion.h1
           className={`${styling} ${integralCF.className} py-4 text-[40px] font-bold text-center mx-auto`}
+          variants={headingVariant}
         >
           {text}
-        </h1>
+        </motion.h1>
       </div>
       <div className="lg:mx-8">
         <Swiper
@@ -43,8 +67,13 @@ const CustomOffers: React.FC<CustomOffersProps> = ({
             1300: { slidesPerView: 4 },
           }}
           loop={true}
-          modules={[Navigation, Pagination, A11y]}
+          modules={[Navigation, Pagination, A11y, Autoplay]} // Add Autoplay to modules
           className="flex justify-center md:flex-row flex-col md:gap-y-0 gap-y-12 items-center mt-14 mx-auto w-full"
+          autoplay={{
+            // Enable autoplay
+            delay: 3000, // Set delay between slides in milliseconds (3 seconds)
+            disableOnInteraction: false, // Allow autoplay to continue after user interaction
+          }}
         >
           {isLoading
             ? // Display skeletons while loading
@@ -63,9 +92,7 @@ const CustomOffers: React.FC<CustomOffersProps> = ({
             : arrivalData?.map((items, index) => (
                 <SwiperSlide className="mx-auto" key={index}>
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: index * 0.2 }}
+                    variants={slideVariant} // Apply slideVariant to each SwiperSlide content
                   >
                     <Link
                       href={`/products/${items.slug.current}`}
@@ -117,11 +144,14 @@ const CustomOffers: React.FC<CustomOffersProps> = ({
         </Swiper>
       </div>
       <div className="flex justify-center mt-8">
-        <button className="border border-slate-300 px-8 py-3 text-base w-56 rounded-full font-semibold text-center">
+        <motion.button
+          className="border border-slate-300 px-8 py-3 text-base w-56 rounded-full font-semibold text-center"
+          variants={slideVariant} // Apply slideVariant to the button as well
+        >
           View All
-        </button>
+        </motion.button>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

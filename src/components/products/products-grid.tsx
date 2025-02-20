@@ -16,6 +16,8 @@ import { useSearch } from "@/context/ContextProvider";
 import { motion } from "motion/react"; // Import motion from framer-motion
 
 const sortOptions = [
+  { label: "Most Popular", value: "most-popular" },
+  { label: "Newest", value: "newest" },
   { label: "Price: Low to High", value: "price-low-high" },
   { label: "Price: High to Low", value: "price-high-low" },
 ];
@@ -45,9 +47,9 @@ export function ProductGrid({
     setSelectedPriceRange(priceRange);
   };
 
-  // useEffect to filter and sort products whenever dependencies change
+  // useEffect to filter products whenever selectedCategories or searchQuery or selectedPriceRange changes
   useEffect(() => {
-    let filtered = initialProducts;
+    let filtered = initialProducts; // Start with all products
 
     // Search filter
     if (searchQuery) {
@@ -59,8 +61,8 @@ export function ProductGrid({
     // Category filter
     if (selectedCategories.length > 0) {
       filtered = filtered.filter((product) => {
-        if (!product.tags) return false;
-        return product.tags.some((tag) => selectedCategories.includes(tag));
+        if (!product.tags) return false; // Skip products without tags
+        return product.tags.some((tag) => selectedCategories.includes(tag)); // Check if any tag is in selectedCategories
       });
     }
 
@@ -71,26 +73,8 @@ export function ProductGrid({
         product.price <= selectedPriceRange[1]
     );
 
-    // Sorting logic
-    const sortProducts = (productsToSort: Product[]) => {
-      if (selectedSort.value === "price-low-high") {
-        return [...productsToSort].sort((a, b) => a.price - b.price);
-      } else if (selectedSort.value === "price-high-low") {
-        return [...productsToSort].sort((a, b) => b.price - a.price);
-      }
-      return productsToSort; // Default: no sorting
-    };
-
-    filtered = sortProducts(filtered);
-
-    setProducts(filtered);
-  }, [
-    searchQuery,
-    selectedCategories,
-    selectedPriceRange,
-    selectedSort,
-    initialProducts,
-  ]);
+    setProducts(filtered); // Update the products state with filtered products
+  }, [searchQuery, selectedCategories, selectedPriceRange, initialProducts]); // Effect dependency on searchQuery, selectedCategories, and selectedPriceRange
 
   // useEffect to list unique tags (categories) from products
   useEffect(() => {
@@ -172,7 +156,7 @@ export function ProductGrid({
           <div className="hidden lg:block">
             <Filters
               onCategoryFilterChange={handleCategoryFilterChange}
-              onPriceRangeChange={handlePriceRangeChange}
+              onPriceRangeChange={handlePriceRangeChange} // Add this prop
             />
           </div>
 
@@ -182,7 +166,7 @@ export function ProductGrid({
             isOpen={isFilterOpen}
             onClose={() => setIsFilterOpen(false)}
             onCategoryFilterChange={handleCategoryFilterChange}
-            onPriceRangeChange={handlePriceRangeChange}
+            onPriceRangeChange={handlePriceRangeChange} // Add this prop
           />
 
           {/* Product Grid */}
