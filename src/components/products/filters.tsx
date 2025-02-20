@@ -7,7 +7,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import * as Slider from "@radix-ui/react-slider";
 
 // Define constants for filter options
-const categories = ["T-shirts", "Shorts", "Shirts", "Hoodie", "Jeans"];
+const categories = ["tshirt", "hoodie", "shirt", "jeans", "short"]; // UPDATE THIS ARRAY with your actual tags from console
 const colors = [
   { name: "Green", class: "bg-green-500" },
   { name: "Red", class: "bg-red-500" },
@@ -36,18 +36,45 @@ interface FiltersProps {
   isMobile?: boolean;
   isOpen?: boolean;
   onClose?: () => void;
+  onCategoryFilterChange: (categories: string[]) => void;
+  onPriceRangeChange: (priceRange: number[]) => void; // Add this prop
 }
 
-export function Filters({ isMobile, isOpen, onClose }: FiltersProps) {
+export function Filters({
+  isMobile,
+  isOpen,
+  onClose,
+  onCategoryFilterChange,
+  onPriceRangeChange, // Destructure the new prop
+}: FiltersProps) {
   // State for price range and selected size
   const [priceRange, setPriceRange] = useState([50, 200]);
   const [selectedSize, setSelectedSize] = useState("Small");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]); // State for selected categories
 
   // Function to handle filter application
   const handleApplyFilter = () => {
-    // TODO: Implement filter application logic
-    console.log("Applying filters:", { priceRange, selectedSize });
+    console.log("Applying filters:", {
+      priceRange,
+      selectedSize,
+      selectedCategories,
+    });
+    onCategoryFilterChange(selectedCategories);
+    onPriceRangeChange(priceRange); // Pass priceRange to parent
     onClose?.();
+  };
+
+  const handleCategoryCheckboxChange = (category: string) => {
+    setSelectedCategories((prevCategories) => {
+      const isCategorySelected = prevCategories.includes(category);
+      if (isCategorySelected) {
+        // Remove category if already selected
+        return prevCategories.filter((cat) => cat !== category);
+      } else {
+        // Add category if not selected
+        return [...prevCategories, category];
+      }
+    });
   };
 
   // Main content of the filter component
@@ -77,9 +104,11 @@ export function Filters({ isMobile, isOpen, onClose }: FiltersProps) {
         {/* Categories accordion */}
         <Accordion.Root type="multiple" className="space-y-4">
           {categories.map((category) => (
-            <Accordion.Item key={category} value={category}>
+            <Accordion.Item className="group" key={category} value={category}>
               <Accordion.Trigger className="flex items-center justify-between w-full text-left">
-                <span className="text-sm">{category}</span>
+                <span className="text-sm group-hover:underline">
+                  {category}
+                </span>
                 <ChevronRight className="h-4 w-4 transform transition-transform duration-200 group-data-[state=open]:rotate-90" />
               </Accordion.Trigger>
               <Accordion.Content className="pt-2">
@@ -88,8 +117,10 @@ export function Filters({ isMobile, isOpen, onClose }: FiltersProps) {
                     <input
                       type="checkbox"
                       className="rounded border-gray-300"
+                      checked={selectedCategories.includes(category)} // Control checkbox state
+                      onChange={() => handleCategoryCheckboxChange(category)} // Handle checkbox change
                     />
-                    <span className="text-sm">Subcategory 1</span>
+                    <span className="text-sm">{category}</span>
                   </label>
                   {/* Add more subcategories as needed */}
                 </div>

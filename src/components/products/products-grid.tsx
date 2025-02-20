@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -13,21 +13,100 @@ import Link from "next/link";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Product } from "@/types/products";
 import { useSearch } from "@/context/ContextProvider";
+import { motion } from "motion/react"; // Import motion from framer-motion
 
 const sortOptions = [
-  { label: "Most Popular", value: "most-popular" },
-  { label: "Newest", value: "newest" },
   { label: "Price: Low to High", value: "price-low-high" },
   { label: "Price: High to Low", value: "price-high-low" },
 ];
 
-export function ProductGrid({ products }: { products: Product[] }) {
+export function ProductGrid({
+  products: initialProducts,
+}: {
+  products: Product[];
+}) {
+  // Rename prop and use initialProducts
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
   const { searchQuery } = useSearch(); // Get the search query from context
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]); // State for selected categories
+  const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([
+    50, 200,
+  ]); // State for price range
+  const [products, setProducts] = useState<Product[]>(initialProducts); // State to hold products, initialize with props
+
+  // Function to handle category filter changes from Filters component
+  const handleCategoryFilterChange = (categories: string[]) => {
+    setSelectedCategories(categories);
+  };
+
+  // Function to handle price range filter changes from Filters component
+  const handlePriceRangeChange = (priceRange: number[]) => {
+    setSelectedPriceRange(priceRange);
+  };
+
+  // useEffect to filter and sort products whenever dependencies change
+  useEffect(() => {
+    let filtered = initialProducts;
+
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Category filter
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter((product) => {
+        if (!product.tags) return false;
+        return product.tags.some((tag) => selectedCategories.includes(tag));
+      });
+    }
+
+    // Price filter
+    filtered = filtered.filter(
+      (product) =>
+        product.price >= selectedPriceRange[0] &&
+        product.price <= selectedPriceRange[1]
+    );
+
+    // Sorting logic
+    const sortProducts = (productsToSort: Product[]) => {
+      if (selectedSort.value === "price-low-high") {
+        return [...productsToSort].sort((a, b) => a.price - b.price);
+      } else if (selectedSort.value === "price-high-low") {
+        return [...productsToSort].sort((a, b) => b.price - a.price);
+      }
+      return productsToSort; // Default: no sorting
+    };
+
+    filtered = sortProducts(filtered);
+
+    setProducts(filtered);
+  }, [
+    searchQuery,
+    selectedCategories,
+    selectedPriceRange,
+    selectedSort,
+    initialProducts,
+  ]);
+
+  // useEffect to list unique tags (categories) from products
+  useEffect(() => {
+    if (initialProducts) {
+      const allTags = initialProducts.reduce((tagsArray: string[], product) => {
+        if (product.tags) {
+          return tagsArray.concat(product.tags);
+        }
+        return tagsArray;
+      }, []);
+
+      const uniqueTags = [...new Set(allTags)];
+
+      console.log("Unique Tags (Categories) from Products:", uniqueTags);
+    }
+  }, [initialProducts]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -48,7 +127,8 @@ export function ProductGrid({ products }: { products: Product[] }) {
           </h1>
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <span className="text-gray-500 text-sm sm:text-base font-normal">
-              Showing 1-12 of 100 Products
+              Showing 1-12 of 100 Products{" "}
+              {/* You might want to update this dynamically based on filtered products */}
             </span>
             <div className="flex items-center gap-4">
               <button
@@ -90,7 +170,10 @@ export function ProductGrid({ products }: { products: Product[] }) {
         <div className="flex gap-8">
           {/* Desktop Filters */}
           <div className="hidden lg:block">
-            <Filters />
+            <Filters
+              onCategoryFilterChange={handleCategoryFilterChange}
+              onPriceRangeChange={handlePriceRangeChange}
+            />
           </div>
 
           {/* Mobile Filters */}
@@ -98,19 +181,26 @@ export function ProductGrid({ products }: { products: Product[] }) {
             isMobile
             isOpen={isFilterOpen}
             onClose={() => setIsFilterOpen(false)}
+            onCategoryFilterChange={handleCategoryFilterChange}
+            onPriceRangeChange={handlePriceRangeChange}
           />
 
           {/* Product Grid */}
           <div className="flex-1">
-            {filteredProducts.length === 0 && (
+            {products.length === 0 && (
               <div className="text-center mt-24">
                 <h1 className="text-4xl font-semibold text-center">
                   No Products Available!
                 </h1>
               </div>
             )}
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-6">
-              {filteredProducts.map((product) => (
+            <motion.div // Changed div to motion.div and added animation props
+              className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {products.map((product) => (
                 <Link
                   key={product._id}
                   href={`/products/${product.slug.current}`}
@@ -119,7 +209,7 @@ export function ProductGrid({ products }: { products: Product[] }) {
                   <ProductCard {...product} />
                 </Link>
               ))}
-            </div>
+            </motion.div>
 
             {/* Pagination */}
             <div className="mt-8 sm:mt-12 flex items-center justify-center gap-1 sm:gap-2">
